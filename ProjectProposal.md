@@ -2,7 +2,7 @@
 
 Our group wants to look at how income, poverty, and grocery store access relate to diabetes and obesity rates across U.S. counties. We want to see whether counties with fewer resources also tend to have higher rates of these conditions, and whether grocery access helps explain some of the differences.
 We plan to use three public datasets: CDC PLACES for health estimates, the Census American Community Survey (ACS) for income and poverty, and the USDA Food Environment Atlas for grocery store information. We will connect them using county FIPS codes, a shared geographic identifier. First, we'll check each dataset for missing values, inconsistent formats, and other problems. After cleaning those up, we'll combine the data. After the join, we'll assess the combined data again and make graphs and summaries. If we have time, we'll try a basic regression model.
-Because IS 477 focuses on data curation, we want someone else to be able to run our work without guessing what we did. We'll write scripts for downloading, cleaning, merging, checking, and analyzing the data, and document any decisions we make. We're looking for associations between county characteristics, not trying to prove that one factor causes a health outcome.
+Because IS 477 focuses on data curation, we want someone else to be able to run our work without guessing what we did. We'll write scripts for downloading, cleaning, merging, checking, and analyzing the data, and document any decisions we make. We're looking for associations between county characteristics rather than trying to prove that one factor causes a health outcome.
 
 ## 2. Team
    
@@ -11,17 +11,20 @@ Timothy: Download and clean CDC PLACES data; help with health analysis and quali
 Grace: Download and clean Census ACS income and poverty data; help with the data dictionary.
 Eshan: Download and clean USDA food environment data; help automate the workflow.
 Zahi: Lead county FIPS matching, merge the datasets, and check the combined results.
-We'll each commit our work to GitHub and write our own short contribution summary for the status report. We'll review one another's work rather than relying only on whoever prepared a dataset.
+We'll each commit our work to GitHub, write our own short contribution summary for the status report, and review one another's work.
 
 ## 3. Research or Business Questions
 
 Are lower median household incomes associated with higher estimated diabetes and obesity prevalence?
+
 How are county poverty rates related to these health outcomes?
+
 Does grocery store availability show a relationship with diabetes or obesity after considering income and poverty?
+
 How much county coverage and data quality do we lose when combining information from three agencies?
 
 ## 4. Datasets and Integration Plan
-We'll use original government sources rather than datasets reposted on Kaggle.
+We'll use original government sourced datasets.
 
 CDC PLACES: County Data (2024 release)
 Source: https://data.cdc.gov/d/fu4u-a9bh  
@@ -68,7 +71,7 @@ docs/               # sources, data dictionary, methods
 Our final README will be the main report. It will link to our files and explain the quality checks, cleaning steps, results, at least one graph, limitations, and how to rerun the project. We'll make a data dictionary explaining the columns and a machine-readable metadata file, probably in Schema.org JSON-LD format. We'll also record where each dataset came from, when we accessed it, and the rules for reusing the data and our code. Input data will be committed to GitHub when permitted and appropriately sized. For data over 50 MB or that cannot be redistributed, we'll follow the course's Box-sharing requirement and provide tested download code and a working link.
 
 ## 6. Timeline
-These are our proposed targets, not confirmed course deadlines. We'll check them against Canvas and adjust them if needed.
+These are our proposed targets, and we'll check them against Canvas and adjust them if needed.
 
 | Target | Task | Lead |
 | --- | --- | --- |
@@ -83,3 +86,38 @@ These are our proposed targets, not confirmed course deadlines. We'll check them
 | Dec. 4 | Fresh-clone test, verify data access, finalize final-project release | Everyone |
 
 We'll submit the project-plan, status-report, and final-project GitHub releases through Canvas, using the actual course deadlines once confirmed. At the interim milestone, each member will commit their own contribution summary. Before the final release, we'll test the workflow in a fresh clone with dependencies installed from requirements.txt.
+
+## 7. Constraints
+
+These constraints come from the documentation for our three sources. 
+
+### 7.1 Health estimates are modeled from survey data
+
+PLACES estimates come from a statistical model applied to self-reported 2022 BRFSS survey data, and self-reported height and weight tend to underestimate obesity. CDC lists ACS 2018-2022 estimates among the model's inputs, which is the same ACS period we use for income and poverty, so part of any relationship we find between poverty and health may come from the model itself. Some small counties also lack reliable estimates.
+
+### 7.2 The grocery store measure is narrow
+
+The Atlas grocery count excludes convenience stores, supercenters, and warehouse club stores, so it may understate food access in rural counties where a supercenter is the main place to buy food. It also leaves out distance to stores, prices, and car access. Missing values are coded as blank cells or -9999 and must be converted before analysis.
+
+### 7.3 The sources describe different time periods
+
+The health data describe 2022, the ACS data pool responses from 2018 through 2022, and the Atlas store counts come from an earlier year that we still need to confirm. We will record each variable's reference year in the data dictionary.
+
+### 7.4 County boundaries and FIPS codes have changed
+
+Starting with 2022 data, the Census Bureau replaced Connecticut's eight counties (FIPS 09001 to 09015) with nine planning regions (FIPS 09110 to 09190) that follow different boundaries. The ACS uses the new codes, while older Atlas data likely uses the old ones, so we will either build a town-based crosswalk or exclude Connecticut. Other changes, such as the 2019 split of Alaska's Valdez-Cordova Census Area, will appear in our unmatched-county report. Our scope is limited to the 50 states and DC, which is what PLACES covers.
+
+### 7.5 Legal and ethical considerations
+
+All three sources are public federal data. Some PLACES listings name the Open Database License (ODbL), which could require our merged table to use the same license, so we will confirm the terms for our exact dataset. Our data contain only county-level values, and we will present results as county-level associations to avoid implying anything about individual residents.
+
+### 7.6 Analytical limits
+
+Income and poverty are strongly correlated, neighboring counties tend to resemble one another, and county populations vary widely. These issues affect the reliability of a regression and how strongly we can state results for Question 3.
+
+## 8. Gaps
+
+- **Crude or age-adjusted rates:** We must decide whether to use crude or age-adjusted prevalence. We will choose one and use it for both diabetes and obesity.
+- **Grocery store variable:** We still need to confirm the most recent grocery store year in the Atlas and how many counties it covers. This will determine our final food access variable.
+- **Connecticut counties:** Connecticut's county FIPS codes changed in 2022, so its counties may not match across all three sources. We will either build a crosswalk or exclude Connecticut and document the reason.
+- **Licensing:** We need to confirm the license for the PLACES data and choose licenses for our code and merged dataset.
