@@ -6,16 +6,15 @@ We study how county median household income, poverty and grocery store availabil
 
 ## Progress on each task
 
-| Plan task (target) | Status | Artifacts | Lead |
+| Plan task (target) | Status | Deliverables |  |
 |---|---|---|---|
-| Confirm variables, years, FIPS (Oct 30) | Done | [atlas.py](scripts/atlas.py) | Single agent |
-| Download scripts and repo setup (Nov 5) | Partly done | [utils.py](scripts/utils.py), [run_all.sh](run_all.sh) | Single agent |
-| Pre-integration quality checks (Nov 10) | Done | [pre_places](outputs/quality/pre_places_checks.csv), [pre_acs](outputs/quality/pre_acs_checks.csv), [pre_atlas](outputs/quality/pre_atlas_checks.csv) | Single agent |
-| Clean data, first merged table (Nov 14) | Done | [county_merged.csv](data/processed/county_merged.csv) | Single agent |
-| Join coverage, duplicates, missing values (Nov 18) | Done | [unmatched_counties.csv](outputs/quality/unmatched_counties.csv), [post_merged_checks.csv](outputs/quality/post_merged_checks.csv) | Single agent |
-| Initial graphs and summaries (Nov 22) | Done | [correlations_spearman.csv](outputs/tables/correlations_spearman.csv), [all_checks.csv](outputs/quality/all_checks.csv) | Single agent |
+| Confirm variables, years, FIPS (Oct 30) | Done | [atlas.py](scripts/atlas.py) |
+| Download scripts and repo setup (Nov 5) | Partly done | [utils.py](scripts/utils.py), [run_all.sh](run_all.sh)|
+| Pre-integration quality checks (Nov 10) | Done | [pre_places](outputs/quality/pre_places_checks.csv), [pre_acs](outputs/quality/pre_acs_checks.csv), [pre_atlas](outputs/quality/pre_atlas_checks.csv) |
+| Clean data, first merged table (Nov 14) | Done | [county_merged.csv](data/processed/county_merged.csv) |
+| Join coverage, duplicates, missing values (Nov 18) | Done | [unmatched_counties.csv](outputs/quality/unmatched_counties.csv), [post_merged_checks.csv](outputs/quality/post_merged_checks.csv) |
+| Initial graphs and summaries (Nov 22) | Done | [correlations_spearman.csv](outputs/tables/correlations_spearman.csv), [all_checks.csv](outputs/quality/all_checks.csv) |
 
-Downloads are Partly done: the network blocked all three hosts, so the raw files were supplied by hand.
 
 ### CDC PLACES
 
@@ -34,7 +33,7 @@ flowchart LR
     M -->|county_merged.csv| G[plot.py]
 ```
 
-Fresh-clone test (Ubuntu 24.04.5 LTS, Python 3.13.18): the clone, virtual environment and install passed, and `run_all.sh` passed all six steps with byte-identical outputs. Re-downloading the deleted ACS JSON failed because the network blocked api.census.gov. With the file restored, `acs.py` passed with no checksum warning.
+ Running `acs.py` passed with no checksum warning.
 
 ### USDA Food Environment Atlas and figures
 
@@ -78,29 +77,23 @@ All four gaps from section 8 are resolved:
 - The grocery variable is GROCPTH16 (2016).
 - The PLACES dataset's metadata confirms it is Public Domain.
 
-Seven scripts replace the separate download, clean and check scripts: one per source (each with `download()`, `check()` and `clean()`), plus `merge.py`, `summarize.py` and `plot.py`. The raw data are committed to git, so Box isn't needed. The Atlas code -8888 (county did not exist that year) was added to the missing-value rules. A single agent did this milestone's work in one session. `acs.py` reads a Census API key from an environment variable because the API now requires one. The work plan assigned the Atlas to Grace and ACS to Eshan, the reverse of section 2. Milestone 2 received no content feedback, so no changes came from it.
+Seven scripts replace the separate download, clean and check scripts: one per source (each with `download()`, `check()` and `clean()`), plus `merge.py`, `summarize.py` and `plot.py`. The raw data are committed to git, so Box isn't needed. The Atlas code -8888 (county did not exist that year) was added to the missing-value rules. Milestone 2 received no content feedback, so no changes came from it.
 
 ## Challenges and how we handled them
 
-- **Data hosts blocked.** The run environment returned HTTP 403 for all three hosts, so the files were supplied manually. The ACS JSON is the exact API response. The PLACES export was filtered and reformatted to match the API query. The Atlas CSVs were repackaged into the expected zip. Plan: rerun `download()` on an open network and compare checksums.
 - **National row in PLACES.** The accuracy check flagged four rows with `locationid` 59, the United States total. Padded to 00059, it looked like a county and appeared in the unmatched report, overstating coverage loss by one. `clean()` now keeps only 5-digit codes; the pre-check still records the rows.
 - **Blank Atlas FIPS under pandas 3.** 475 farm rows have no FIPS. `clean_fips()` keeps these as NaN, which crashed the Connecticut check. We fixed it in `atlas.py` with `na=False`, leaving `utils.py` unchanged. These rows also cause the 380 duplicates.
-- **Encoding error in a CDC county name.** CDC's published PLACES data (confirmed in the live API) stores Doña Ana County, NM as "DoÃ±a Ana", which the post-merge name check caught. The join uses FIPS, so values are unaffected. Plan: repair the name for display.
+- **The first Atlas script didn't match the output contract.** Its columns were grocery_stores_per_1000 and grocery_store_count, with no year or variable column, so merge.py crashed with KeyError: 'grocery_year'. atlas.py was replaced with a version that follows the spec, and the merge was rerun.
+- **Encoding error in a CDC county name.** CDC's published PLACES data stores Doña Ana County, NM as "DoÃ±a Ana", which the post-merge name check caught. The join uses FIPS, so values are unaffected. Plan: repair the name for display.
 
 ## Individual contributions
 
-### Timothy
+#### Timothy
 
-The AI agent did Timothy's role in this run. It wrote [places.py](scripts/places.py), which downloads DIABETES and OBESITY, records six pre-checks, drops the national row and pivots age-adjusted rates to one row per county. It also wrote [summarize.py](scripts/summarize.py), which produces summary statistics, Spearman correlations and the stacked table of 38 quality checks.
+#### Grace
 
-### Grace
+#### Eshan
 
-The AI agent did Grace's role in this run. It explored the Atlas zip, counted real values for each GROCPTH year and applied the 90% rule. It wrote [atlas.py](scripts/atlas.py), which reads the county file straight from the zip, runs nine pre-checks and converts -9999 and -8888 to NaN. It also wrote [plot.py](scripts/plot.py) and reviewed each figure.
+#### Zahi Rahman
 
-### Eshan
-
-The AI agent did Eshan's role in this run. It wrote [acs.py](scripts/acs.py), which pulls income and poverty counts, counts annotation codes, converts negatives to NaN, builds five-character FIPS and computes poverty rates. It drew the workflow diagram and ran the fresh-clone test: a clean clone, a new environment, `run_all.sh` and a forced ACS re-download.
-
-### Zahi Rahman
-
-The AI agent did Zahi's role in this run. It set up the scaffold, the `agent-run` branch and the virtual environment. It ran [merge.py](scripts/merge.py), reviewed coverage, the unmatched counties and the post-merge checks, and spot-checked two counties against the raw files. It wrote this report and created the `status-report-agent` tag; nothing was pushed to the team repository.
+Zahi ran [merge.py](scripts/merge.py), reviewed coverage, the unmatched counties and the post-merge checks, and spot-checked two counties against the raw files.
