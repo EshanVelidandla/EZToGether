@@ -1,0 +1,14 @@
+dimension,check,count,example
+completeness,places counties not in merged table,9,
+completeness,acs counties not in merged table,9,
+completeness,atlas counties not in merged table,9,
+completeness,missing diabetes_pct,0,
+completeness,missing obesity_pct,0,
+completeness,missing poverty_rate_pct,0,
+completeness,missing median_hh_income,1,
+completeness,missing grocery_per_1k,78,
+accuracy,percentages outside 0-100,0,
+accuracy,income <= 0 or grocery rate < 0,0,
+consistency,duplicate FIPS,0,
+consistency,PLACES and ACS county names disagree,1,"DoÃ±a Ana vs Doña Ana County, New Mexico"
+timeliness,reference years,,"PLACES [2022], ACS 2018-2022, Atlas [2016]"

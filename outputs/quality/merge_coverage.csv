@@ -1,0 +1,4 @@
+in_places,in_acs,in_atlas,counties
+False,False,True,9
+True,True,False,9
+True,True,True,3135
