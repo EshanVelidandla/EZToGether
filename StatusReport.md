@@ -2,12 +2,12 @@
 
 ## Overview
 
-We study how county median household income, poverty and grocery store availability are associated with estimated diabetes and obesity prevalence, using CDC PLACES (2024 release), Census ACS 2018–2022 and the USDA Food Environment Atlas. This milestone delivers seven scripts that download, check, clean, merge and summarize the sources, plus quality-check tables and three figures. [places_clean.csv](data/processed/places_clean.csv), [acs_clean.csv](data/processed/acs_clean.csv) has 3,144 and [atlas_clean.csv](data/processed/atlas_clean.csv) each have 3,144 rows. The merged table has 3,135 counties, and 18 county codes are unmatched.
+We study how county median household income, poverty and grocery store availability are associated with estimated diabetes and obesity prevalence, using CDC PLACES (2024 release), Census ACS 2018–2022 and the USDA Food Environment Atlas. This milestone delivers seven scripts that download, check, clean, merge and summarize the sources, plus quality-check tables and three figures. [places_clean.csv](data/processed/places_clean.csv), [acs_clean.csv](data/processed/acs_clean.csv) and [atlas_clean.csv](data/processed/atlas_clean.csv) each have 3,144 counties. The merged table has 3,135 counties, and 18 county codes are unmatched.
 
 ## Progress on each task
 
-| Plan task (target) | Status | Deliverables |  |
-|---|---|---|---|
+| Plan task (target) | Status | Deliverables |
+|---|---|---|
 | Confirm variables, years, FIPS (Oct 30) | Done | [atlas.py](scripts/atlas.py) |
 | Download scripts and repo setup (Nov 5) | Partly done | [utils.py](scripts/utils.py), [run_all.sh](run_all.sh)|
 | Pre-integration quality checks (Nov 10) | Done | [pre_places](outputs/quality/pre_places_checks.csv), [pre_acs](outputs/quality/pre_acs_checks.csv), [pre_atlas](outputs/quality/pre_atlas_checks.csv) |
@@ -112,4 +112,4 @@ I added [acs.py](scripts/acs.py) and the ACS raw data, then ran the pre-integrat
 
 #### Zahi Rahman
 
-Zahi ran [merge.py](scripts/merge.py), reviewed coverage, the unmatched counties and the post-merge checks, and spot-checked two counties against the raw files.
+I set up the repository structure for the milestone update and ran [merge.py](scripts/merge.py), then reviewed coverage, the unmatched counties and the post-merge checks, and spot-checked two counties against the raw files. When the first Atlas script broke the merge, I replaced [atlas.py](scripts/atlas.py) with a version that follows our file contract, and reran the merge.
