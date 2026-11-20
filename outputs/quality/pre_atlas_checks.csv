@@ -1,4 +1,10 @@
 dimension,check,count,example
-completeness,GROC16,76,3068/3144 valid values
-completeness,GROCPTH16,76,3068/3144 valid values
-consistency,duplicate county-variable rows,0,
+accuracy,grocery rate below 0 (excluding -9999 and -8888),0,
+completeness,GROCPTH16 counties with a value,3066,
+completeness,"GROCPTH16 counties with -9999, -8888 or blank",78,
+completeness,GROC16 counties with a value,3066,
+completeness,"GROC16 counties with -9999, -8888 or blank",78,
+timeliness,GROCPTH years available,2,"GROCPTH16, GROCPTH20; Atlas updated 2025-07-30"
+consistency,FIPS shorter than 5 characters,0,
+consistency,duplicate FIPS+Variable_Code,380,
+consistency,Connecticut county codes,17,"09001, 09003, 09005, 09007, 09009, 09011, 09013, 09015, 09110, 09120, 09130, 09140, 09150, 09160, 09170, 09180, 09190"
