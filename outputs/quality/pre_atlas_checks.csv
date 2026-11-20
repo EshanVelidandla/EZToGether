@@ -1,0 +1,4 @@
+dimension,check,count,example
+completeness,GROC16,76,3068/3144 valid values
+completeness,GROCPTH16,76,3068/3144 valid values
+consistency,duplicate county-variable rows,0,
