@@ -92,6 +92,8 @@ Seven scripts replace the separate download, clean and check scripts: one per so
 
 #### Grace
 
+explored the Atlas zip, counted real values for each GROCPTH year and applied the 90% rule. She wrote [atlas.py](scripts/atlas.py), which reads the county file straight from the zip, runs nine pre-checks and converts -9999 and -8888 to NaN. She also wrote [plot.py](scripts/plot.py) and reviewed each figure.
+
 #### Eshan
 
 #### Zahi Rahman
