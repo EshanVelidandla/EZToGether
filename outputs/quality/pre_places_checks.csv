@@ -1,0 +1,7 @@
+dimension,check,count,example
+accuracy,data_value outside 0-100,0,
+accuracy,locationid not 5 characters,4,59
+completeness,missing data_value,0,
+completeness,states covered,52,
+timeliness,data years,1,2022
+consistency,duplicate locationid+measureid+datavaluetypeid,0,

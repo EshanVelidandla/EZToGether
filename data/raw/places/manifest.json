@@ -1,0 +1,11 @@
+{
+  "url": "https://data.cdc.gov/resource/fu4u-a9bh.csv",
+  "params": {
+    "$where": "measureid in('DIABETES','OBESITY')",
+    "$order": "locationid,measureid,datavaluetypeid",
+    "$limit": 50000
+  },
+  "file": "places_county_2024.csv",
+  "accessed": "2026-11-19",
+  "sha256": "74f285b95402399ed8d3f6853a555241fd7573ba2b6ebba7a664fb7e29475f39"
+}
