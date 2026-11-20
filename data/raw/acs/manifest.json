@@ -1,0 +1,11 @@
+{
+  "url": "https://api.census.gov/data/2022/acs/acs5",
+  "params": {
+    "get": "NAME,B19013_001E,B19013_001M,B17001_001E,B17001_002E",
+    "for": "county:*",
+    "in": "state:*"
+  },
+  "file": "acs5_2022_county.json",
+  "accessed": "2026-11-19",
+  "sha256": "45a9688df7b8c6640a6e61bebfadab5f0df7224f2f342d2ab2a4ddec1ab64ad2"
+}

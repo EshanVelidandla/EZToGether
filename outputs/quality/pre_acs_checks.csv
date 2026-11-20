@@ -1,0 +1,12 @@
+dimension,check,count,example
+completeness,rows returned by the API,3222,
+completeness,territory rows dropped,78,Puerto Rico (72)
+completeness,suppressed values (negative Census codes),2,
+completeness,missing median_hh_income,1,
+completeness,missing poverty_rate_pct,0,
+accuracy,below_poverty greater than poverty_universe,0,
+accuracy,poverty rate outside 0-100,0,
+accuracy,income margin of error over 10% of estimate,857,"Bibb County, Alabama"
+consistency,duplicate FIPS,0,
+consistency,FIPS not 5 digits,0,
+timeliness,reference period,,ACS 5-year 2018-2022
