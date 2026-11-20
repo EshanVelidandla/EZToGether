@@ -101,6 +101,8 @@ Seven scripts replace the separate download, clean and check scripts: one per so
 
 #### Timothy
 
+I wrote [places.py](scripts/places.py), which downloads DIABETES and OBESITY data, records six pre-checks, drops the national row, and pivots age-adjusted rates to one row per county. I also wrote [summarize.py](scripts/summarize.py), which produces summary statistics, Spearman correlations, and a combined table of 38 quality checks.
+
 #### Grace
 
 explored the Atlas zip, counted real values for each GROCPTH year and applied the 90% rule. She wrote [atlas.py](scripts/atlas.py), which reads the county file straight from the zip, runs nine pre-checks and converts -9999 and -8888 to NaN. She also wrote [plot.py](scripts/plot.py) and reviewed each figure.
