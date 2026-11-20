@@ -18,6 +18,8 @@ We study how county median household income, poverty and grocery store availabil
 Downloads are Partly done: the network blocked all three hosts, so the raw files were supplied by hand.
 
 ### CDC PLACES
+We used the 2024 CDC PLACES release to obtain county-level estimates of diabetes and obesity prevalence for 2022. [places.py](scripts/places.py) reads the raw CSV, records [pre-merge quality checks](outputs/quality/pre_places_checks.csv), and reshapes the age-adjusted estimates into one row per county. The [cleaned PLACES file](data/processed/places_clean.csv) contains 3,144 county records.
+
 
 [places.py](scripts/places.py) requests DIABETES and OBESITY rows from the Socrata API with a fixed sort order and a 50,000-row limit, then pivots them to one row per county. We use age-adjusted prevalence so counties with older populations are comparable. Pre-checks on the 12,580 raw rows found no values outside 0–100, no missing values and no duplicates. Four rows have a non-five-character `locationid`; all four are the national row (`59`), which `clean()` drops. The 52 "states" covered are the 50 states, DC and the US total. The only data year is 2022: the 2024 release describes 2022 BRFSS data.
 
@@ -90,6 +92,8 @@ Seven scripts replace the separate download, clean and check scripts: one per so
 ## Individual contributions
 
 ### Timothy
+
+I ran the PLACES cleaning script, verified that it produced the cleaned county file and pre-merge quality checks, and pushed those files to `main`. After the merge, I ran [summarize.py](scripts/summarize.py) and pushed the [summary statistics](outputs/tables/summary_stats.csv), [Spearman correlations](outputs/tables/correlations_spearman.csv), and [combined quality checks](outputs/quality/all_checks.csv). The combined table pulls together four quality-check files.
 
 The AI agent did Timothy's role in this run. It wrote [places.py](scripts/places.py), which downloads DIABETES and OBESITY, records six pre-checks, drops the national row and pivots age-adjusted rates to one row per county. It also wrote [summarize.py](scripts/summarize.py), which produces summary statistics, Spearman correlations and the stacked table of 38 quality checks.
 
