@@ -1,9 +1,10 @@
 """Download Census ACS 2018-2022 county income and poverty, check it, and clean it."""
 import json
+import os
 
 import pandas as pd
 
-from utils import PROCESSED, clean_fips, download, drop_territories, save_checks
+from utils import PROCESSED, RAW, clean_fips, download, drop_territories, save_checks
 
 URL = "https://api.census.gov/data/2022/acs/acs5"
 PARAMS = {
@@ -19,9 +20,24 @@ COLUMNS = {
 }
 VALUES = list(COLUMNS.values())
 
+# The Census API requires a free key: https://api.census.gov/data/key_signup.html
+# Set it with: export CENSUS_API_KEY=your_key (it is never written to a file)
+if os.environ.get("CENSUS_API_KEY"):
+    PARAMS["key"] = os.environ["CENSUS_API_KEY"]
+
 # Raw API response: a list of rows with the header first
+manifest = RAW / "acs" / "manifest.json"
+saved = manifest.read_text() if manifest.exists() else None
 path = download(URL, "acs/acs5_2022_county.json", PARAMS)
-rows = json.loads(path.read_text(encoding="utf-8"))
+text = path.read_text(encoding="utf-8")
+if not text.lstrip().startswith("["):
+    path.unlink()
+    if saved is not None:
+        manifest.write_text(saved)
+    raise SystemExit("The Census API sent an error page instead of data (usually a missing key).\n"
+                     "Get a free key at https://api.census.gov/data/key_signup.html, then run:\n"
+                     "  export CENSUS_API_KEY=your_key")
+rows = json.loads(text)
 raw = pd.DataFrame(rows[1:], columns=rows[0])
 
 df = pd.DataFrame({
